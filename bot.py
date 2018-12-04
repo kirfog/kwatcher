@@ -1,6 +1,6 @@
 import feedparser
 import requests
-import  time
+import time
 
 session = requests.session()
 session.proxies = {}
