@@ -3,7 +3,7 @@ import requests
 import time
 
 session = requests.session()
-session.proxies = {}
+#session.proxies = {}
 #session.proxies['http'] = 'socks5h://localhost:9050'
 #session.proxies['https'] = 'socks5h://localhost:9050'
 
@@ -50,9 +50,9 @@ def get_rss(link):
 
 def get_sunrise():
 	sessionSun = requests.session()
-	sessionSun.proxies = {}
-	sessionSun.proxies['http'] = 'socks5h://localhost:9050'
-	sessionSun.proxies['https'] = 'socks5h://localhost:9050'
+	#sessionSun.proxies = {}
+	#sessionSun.proxies['http'] = 'socks5h://localhost:9050'
+	#sessionSun.proxies['https'] = 'socks5h://localhost:9050'
 	sun = sessionSun.get("https://api.sunrise-sunset.org/json?lat=59.9342802&lng=30.3350986").json()
 	return sun
 
