@@ -85,7 +85,7 @@ def main():
                 sun = get_sunrise()
                 send_mess(chat_id, "Sun rises at " + str(sun["results"]["sunrise"]) + " and sets at " + str(sun["results"]["sunset"]) + "UTC")
             update_id += 1
-        time.sleep(5)
+        time.sleep(20)
 
 if __name__ == '__main__':
     try:
