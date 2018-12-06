@@ -1,6 +1,7 @@
 import feedparser
 import requests
 import time
+import threading
 
 session = requests.session()
 #session.proxies = {}
@@ -56,15 +57,25 @@ def get_sunrise():
 	sun = sessionSun.get("https://api.sunrise-sunset.org/json?lat=59.9342802&lng=30.3350986").json()
 	return sun
 
+def doit(chat_id):
+    threading.Timer(60, doit).start()
+    year = time.localtime().tm_year
+    month = time.localtime().tm_yday // 28 + 1
+    day = time.localtime().tm_yday % 28
+    send_mess(chat_id, "Today is " + str(day) + " day in " + str(month) + " month of " + str(year))
+    retern t
+
 def main():
     update_id = last_update(get_updates_json(url))['update_id']
     while True:
         updates = get_updates_json(url)
         day = day_updates(updates)
         last = last_update(updates)
+        chat_id = get_chat_id(last)
         print(day)
         print(last['update_id'])
         print(last)
+        doit(chat_id)
         if last['update_id'] > update_id:
             chat_id = get_chat_id(last)
             first_name = get_chat_first_name(last)
