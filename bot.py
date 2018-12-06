@@ -63,7 +63,6 @@ def doit(chat_id):
     month = time.localtime().tm_yday // 28 + 1
     day = time.localtime().tm_yday % 28
     send_mess(chat_id, "Today is " + str(day) + " day in " + str(month) + " month of " + str(year))
-    retern t
 
 def main():
     update_id = last_update(get_updates_json(url))['update_id']
