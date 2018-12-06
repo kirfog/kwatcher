@@ -58,7 +58,7 @@ def get_sunrise():
 	return sun
 
 def doit(chat_id):
-    threading.Timer(60, doit).start()
+    threading.Timer(86400, doit).start()
     year = time.localtime().tm_year
     month = time.localtime().tm_yday // 28 + 1
     day = time.localtime().tm_yday % 28
