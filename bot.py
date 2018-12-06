@@ -75,10 +75,11 @@ def main():
         day = day_updates(updates)
         last = last_update(updates)
         chat_id = get_chat_id(last)
+        month13(chat_id)
         #print(day)
         #print(last['update_id'])
         #print(last)
-        yearday = time.localtime().tm_year
+
         if last['update_id'] > update_id:
             chat_id = get_chat_id(last)
             first_name = get_chat_first_name(last)
@@ -99,7 +100,6 @@ def main():
                 sun = get_sunrise()
                 send_mess(chat_id, "Sun rises at " + str(sun["results"]["sunrise"]) + " and sets at " + str(sun["results"]["sunset"]) + "UTC")
             update_id += 1
-        month13(chat_id)
         time.sleep(20)
 
 if __name__ == '__main__':
