@@ -60,7 +60,12 @@ def month13(chat_id):
     year = time.localtime().tm_year
     month = time.localtime().tm_yday // 28 + 1
     day = time.localtime().tm_yday % 28
-    send_mess(chat_id, "Today is " + str(day) + " day in " + str(month) + " month of " + str(year))
+    time13 = 8000(time.localtime().tm_hour * 3600 + time.localtime().tm_min * 60 + time.localtime().tm_sec)/86400
+    time13hour = time13 // 400
+    time13min = (time13 % 400)//20
+    time13sec = ((time13 % 400) % 20)//20
+    if time13hour = time13min:
+        send_mess(chat_id, "Today is " + str(day) + " day in " + str(month) + " month of " + str(year) + ". Time is " + time13hour + ":" + time13min +  ":" + time13sec)
 
 
 def main():
@@ -70,11 +75,10 @@ def main():
         day = day_updates(updates)
         last = last_update(updates)
         chat_id = get_chat_id(last)
-        print(day)
-        print(last['update_id'])
-        print(last)
-        if  time.localtime().tm_sec == time.localtime().tm_min and time.localtime().tm_min == time.localtime().tm.hour:
-            month13(chat_id)
+        #print(day)
+        #print(last['update_id'])
+        #print(last)
+        yearday = time.localtime().tm_year
         if last['update_id'] > update_id:
             chat_id = get_chat_id(last)
             first_name = get_chat_first_name(last)
@@ -95,6 +99,7 @@ def main():
                 sun = get_sunrise()
                 send_mess(chat_id, "Sun rises at " + str(sun["results"]["sunrise"]) + " and sets at " + str(sun["results"]["sunset"]) + "UTC")
             update_id += 1
+        month13(chat_id)
         time.sleep(20)
 
 if __name__ == '__main__':
