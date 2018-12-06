@@ -74,7 +74,7 @@ def main():
         print(day)
         print(last['update_id'])
         print(last)
-        doit(chat_id)
+        #doit(chat_id)
         if last['update_id'] > update_id:
             chat_id = get_chat_id(last)
             first_name = get_chat_first_name(last)
