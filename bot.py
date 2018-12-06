@@ -60,7 +60,7 @@ def month13(chat_id):
     year = time.localtime().tm_year
     month = time.localtime().tm_yday // 28 + 1
     day = time.localtime().tm_yday % 28
-    time13 = 8000(time.localtime().tm_hour * 3600 + time.localtime().tm_min * 60 + time.localtime().tm_sec)/86400
+    time13 = (time.localtime().tm_hour * 3600 + time.localtime().tm_min * 60 + time.localtime().tm_sec)/86400*8000
     time13hour = time13 // 400
     time13min = (time13 % 400)//20
     time13sec = ((time13 % 400) % 20)//20
