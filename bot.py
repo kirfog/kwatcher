@@ -66,7 +66,7 @@ def month13(chat_id):
     time13sec = ((time13 % 400) % 20)//20
     if time13hour = time13min:
         send_mess(chat_id, "Today is " + str(day) + " day in " + str(month) + " month of " + str(year) + ". Time is " + time13hour + ":" + time13min +  ":" + time13sec)
-
+    print("Today is " + str(day) + " day in " + str(month) + " month of " + str(year) + ". Time is " + time13hour + ":" + time13min +  ":" + time13sec)
 
 def main():
     update_id = last_update(get_updates_json(url))['update_id']
