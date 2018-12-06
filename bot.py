@@ -64,9 +64,8 @@ def month13(chat_id):
     time13hour = int(time13 // 400)
     time13min = int((time13 % 400)//20)
     time13sec = int(((time13 % 400) % 20))
-    if time13hour == time13min and time13hour == day:
+    if time13hour == time13min and time13hour == day and time13sec = time13min:
         send_mess(chat_id, "Today is " + str(day) + " day in " + str(month) + " month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
-        time.sleep(20)
     print("Today is " + str(day) + " day in " + str(month) + " month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
 
 def main():
