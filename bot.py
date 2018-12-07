@@ -101,7 +101,7 @@ def main():
                 rss = get_rss("https://www.nasa.gov/rss/dyn/earth.rss")
                 send_mess(chat_id,rss)
 
-            if chat_text() == "13":
+            if str(chat_text) == "13":
                 month13(chat_id)
 
             if chat_text.lower() == "sun":
