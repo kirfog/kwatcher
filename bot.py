@@ -17,7 +17,7 @@ def get_updates_json(request):
 def last_update(data):
     try:
         results = data['result']
-    except
+    except:
         results = 1
     total_updates = len(results) - 1
     return results[total_updates]
@@ -25,7 +25,7 @@ def last_update(data):
 def day_updates(data):
     try:
         results = data['result']
-    except
+    except:
         results = 1
     total_updates = len(results) - 1
     return total_updates
