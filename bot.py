@@ -15,12 +15,18 @@ def get_updates_json(request):
     return response.json()
 
 def last_update(data):
-    results = data['result']
+    try:
+        results = data['result']
+    except
+        results = 1
     total_updates = len(results) - 1
     return results[total_updates]
 
 def day_updates(data):
-    results = data['result']
+    try:
+        results = data['result']
+    except
+        results = 1
     total_updates = len(results) - 1
     return total_updates
 
@@ -95,7 +101,7 @@ def main():
                 rss = get_rss("https://www.nasa.gov/rss/dyn/earth.rss")
                 send_mess(chat_id,rss)
 
-            if chat_text.lower() == "13":
+            if chat_text() == "13":
                 month13(chat_id)
 
             if chat_text.lower() == "sun":
