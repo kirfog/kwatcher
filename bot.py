@@ -112,7 +112,7 @@ def main():
 
             if chat_text.lower() == "apod":
                 send_mess(chat_id,"Colling to APOD.....")
-                send_mess(chat_id, https://api.nasa.gov/planetary/apod?api_key=NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo)
+                send_mess(chat_id, "https://api.nasa.gov/planetary/apod?api_key=NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo")
             update_id += 1
         time.sleep(20)
 
