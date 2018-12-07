@@ -73,7 +73,8 @@ def month13(chat_id):
     if time13hour == time13min and time13sec == time13min and time13hour == day:
         send_mess(chat_id, "Today is " + str(day) + "th day in " + str(month) + "th month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
     print("Today is " + str(day) + " day in " + str(month) + " month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
-
+    send_mess(chat_id, "Today is " + str(day) + "th day in " + str(month) + "th month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
+    
 def main():
     update_id = last_update(get_updates_json(url))['update_id']
     while True:
