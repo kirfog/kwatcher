@@ -7,7 +7,7 @@ session = requests.session()
 #session.proxies['http'] = 'socks5h://localhost:9050'
 #session.proxies['https'] = 'socks5h://localhost:9050'
 
-url = "https://api.telegram.org/bot634132320:AAG52vGYQkoJYwrMoB2AFLQmkPz7SCMyaf0/"
+url = "https://api.telegram.org/bot/"
 
 def get_updates_json(request):
     params = {'timeout': 100, 'offset': None}
