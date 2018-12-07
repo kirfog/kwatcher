@@ -47,6 +47,11 @@ def send_mess(chat, text):
     response = session.post(url + 'sendMessage', data=params)
     return response
 
+def sendPhoto(chat):
+    params = {'chat_id': chat, 'photo': "https://api.nasa.gov/planetary/apod?api_key=NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo"}
+    response = session.post(url + 'sendPhoto', data=params)
+    return response
+
 def get_rss(link):
     rss = feedparser.parse(link)
     r = ""
@@ -112,7 +117,7 @@ def main():
 
             if chat_text.lower() == "apod":
                 send_mess(chat_id,"Colling to APOD.....")
-                send_mess(chat_id, "<a href="https://api.nasa.gov/planetary/apod?api_key=NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo"></a>")
+                sendPhoto(chat_id)
             update_id += 1
         time.sleep(20)
 
