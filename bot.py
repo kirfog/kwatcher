@@ -95,6 +95,9 @@ def main():
                 rss = get_rss("https://www.nasa.gov/rss/dyn/earth.rss")
                 send_mess(chat_id,rss)
 
+            if chat_text.lower() == "13":
+                month13(chat_id)
+
             if chat_text.lower() == "sun":
                 send_mess(chat_id,"Colling to SUN.....")
                 sun = get_sunrise()
