@@ -48,7 +48,7 @@ def send_mess(chat, text):
     return response
 
 def sendPhoto(chat):
-    params = {'chat_id': chat, 'photo': "https://api.nasa.gov/planetary/apod?api_key=NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo"}
+    params = {'chat_id': chat, 'photo': "https://apod.nasa.gov/apod/image/1812/031218_stllorenc_jcc1200.jpg"}
     response = session.post(url + 'sendPhoto', data=params)
     return response
 
