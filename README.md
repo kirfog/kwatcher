@@ -1,6 +1,6 @@
 
 ### Teleram bot
 
-* Finds solar system objects by name on Wikipedia page and sends it photo
+* Finds solar system's objects by the name on Wikipedia page and sends back their photo, mass and radius
 
 * [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI)
