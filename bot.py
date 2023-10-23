@@ -1,128 +1,38 @@
-import feedparser
-import requests
-import time
+import os
+import telebot
+from reqfunc import *
 
-session = requests.session()
-#session.proxies = {}
-#session.proxies['http'] = 'socks5h://localhost:9050'
-#session.proxies['https'] = 'socks5h://localhost:9050'
+BOT_TOKEN = os.environ['BOT_TOKEN']
+bot = telebot.TeleBot(BOT_TOKEN)
 
-url = "https://api.telegram.org/bot/"
+#bot = telebot.TeleBot(BOT_TOKEN, parse_mode = 'HTML')
+#bot = telebot.TeleBot(BOT_TOKEN, parse_mode = 'Markdown')
 
-def get_updates_json(request):
-    params = {'timeout': 100, 'offset': None}
-    response = session.get(request + 'getUpdates', data=params)
-    return response.json()
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+	bot.reply_to(message, "already started")
 
-def last_update(data):
-    try:
-        results = data['result']
-    except:
-        results = 1
-    total_updates = len(results) - 1
-    return results[total_updates]
-
-def day_updates(data):
-    try:
-        results = data['result']
-    except:
-        results = 1
-    total_updates = len(results) - 1
-    return total_updates
-
-def get_chat_id(update):
-    chat_id = update['message']['chat']['id']
-    return chat_id
-
-def get_chat_first_name(update):
-    chat_first_name = update['message']['chat']['first_name']
-    return chat_first_name
-
-def get_chat_text(update):
-    chat_text = update['message']['text']
-    return chat_text
-
-def send_mess(chat, text):
-    params = {'chat_id': chat, 'text': text}
-    response = session.post(url + 'sendMessage', data=params)
-    return response
-
-def sendPhoto(chat):
-    params = {'chat_id': chat, 'photo': "https://apod.nasa.gov/apod/image/1812/031218_stllorenc_jcc1200.jpg"}
-    response = session.post(url + 'sendPhoto', data=params)
-    return response
-
-def get_rss(link):
-    rss = feedparser.parse(link)
-    r = ""
-    for i in rss['entries']:
-        r = r + "\n" + i['title'] + " " + i['link'] + " " + i['description'] + "\n"
-    return r
-
-def get_sunrise():
-	sessionSun = requests.session()
-	#sessionSun.proxies = {}
-	#sessionSun.proxies['http'] = 'socks5h://localhost:9050'
-	#sessionSun.proxies['https'] = 'socks5h://localhost:9050'
-	sun = sessionSun.get("https://api.sunrise-sunset.org/json?lat=59.9342802&lng=30.3350986").json()
-	return sun
-
-def month13(chat_id):
-    year = time.localtime().tm_year
-    month = time.localtime().tm_yday // 28 + 1
-    day = time.localtime().tm_yday % 28
-    time13 = (time.localtime().tm_hour * 3600 + time.localtime().tm_min * 60 + time.localtime().tm_sec)/86400*8000
-    time13hour = int(time13 // 400)
-    time13min = int((time13 % 400)//20)
-    time13sec = int(((time13 % 400) % 20))
-    if time13hour == time13min and time13sec == time13min and time13hour == day:
-        send_mess(chat_id, "Today is " + str(day) + "th day in " + str(month) + "th month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
-    print("Today is " + str(day) + " day in " + str(month) + " month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
-    send_mess(chat_id, "Today is " + str(day) + "th day in " + str(month) + "th month of " + str(year) + ". Time is " + str(time13hour) + ":" + str(time13min) +  ":" + str(time13sec))
+@bot.message_handler(commands=['help'])
+def nohelp(message):
+	bot.reply_to(message, "cannot help you")
     
-def main():
-    update_id = last_update(get_updates_json(url))['update_id']
-    while True:
-        updates = get_updates_json(url)
-        day = day_updates(updates)
-        last = last_update(updates)
-        chat_id = get_chat_id(last)
-        #month13(chat_id)
-        #print(day)
-        #print(last['update_id'])
-        #print(last)
+@bot.edited_message_handler(func=lambda m: m.text == 'rbc')
+@bot.message_handler(func=lambda m: m.text == 'rbc')
+def sol(message):
+    bot.reply_to(message, rbc()[:4000])
+	
+@bot.edited_message_handler(func=lambda m: True)
+@bot.message_handler(func=lambda m: True)
+def sol(message):
+    sol = solar(message.text)
+    if sol:
 
-        if last['update_id'] > update_id:
-            chat_id = get_chat_id(last)
-            first_name = get_chat_first_name(last)
-            chat_text = get_chat_text(last)
-            send_mess(chat_id, "Hi " + first_name + ", did you say " + chat_text + "?")            
-            if chat_text.lower() == "nasa":
-                send_mess(chat_id,"Colling to NASA.....")
-                rss = get_rss("https://www.nasa.gov/rss/dyn/breaking_news.rss")
-                send_mess(chat_id,rss)
+        #text = '*' + sol['Name'] + '*' + '\n' + "Radius: " + sol['Radius'] + ' Mass: ' + sol['Msss']
+        #bot.send_photo(message.chat.id, photo=sol['Image'], caption=text, reply_to_message_id=message)
 
-            if chat_text.lower() == "earth":
-                send_mess(chat_id,"Colling to EARTH.....")
-                rss = get_rss("https://www.nasa.gov/rss/dyn/earth.rss")
-                send_mess(chat_id,rss)
+        m = sol['Name'] + '\n' + "Radius: " + sol['Radius'] + '\n' +  'Mass: ' + sol['Mass'] + '\n'+ sol['Image'] + '\n'
+        bot.reply_to(message, m)
+    else:
+        bot.reply_to(message, 'do not know that object')
 
-            if str(chat_text) == "13":
-                month13(chat_id)
-
-            if chat_text.lower() == "sun":
-                send_mess(chat_id,"Colling to SUN.....")
-                sun = get_sunrise()
-                send_mess(chat_id, "Sun rises at " + str(sun["results"]["sunrise"]) + " and sets at " + str(sun["results"]["sunset"]) + "UTC")
-
-            if chat_text.lower() == "apod":
-                send_mess(chat_id,"Colling to APOD.....")
-                sendPhoto(chat_id)
-            update_id += 1
-        time.sleep(20)
-
-if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        exit()
+bot.infinity_polling()
