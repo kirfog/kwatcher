@@ -1,1 +1,4 @@
 pyTelegramBotAPI
+bs4
+feedparser
+requests
