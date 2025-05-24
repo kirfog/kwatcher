@@ -5,3 +5,4 @@ requests
 vosk
 argostranslate
 python-dotenv
+ping3

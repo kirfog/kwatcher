@@ -80,8 +80,8 @@ def sol(message):
 
 
 SAMPLE_RATE = 16000
-# model = Model(lang="ru")
-model = Model("../vo/vosk-model-ru-0.42")
+# model = Model(lang="ru")  #  ~/.cache/vosk/
+model = Model("vosk-model")
 rec = KaldiRecognizer(model, SAMPLE_RATE)
 
 
