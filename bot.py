@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 import os
 import telebot
-from reqfunc import get_sunrise, rbc, solar
+from reqfunc import get_sunrise, rbc, solar, buks
 import subprocess
 from vosk import Model, KaldiRecognizer
 import json
+
 # import argostranslate.package
 import argostranslate.translate
 from dotenv import load_dotenv
 import ping3
 import time as t
+
 # import threading
 
 load_dotenv()
@@ -28,16 +30,23 @@ def send_welcome(message):
 
 
 rep = "<pre>"
-rep += "🤷‍♂️ cannot help you \U0001F534 \n"
-rep += "U+260E".ljust(15) + "\U0000260E \n"
-rep += "U+1F52D".ljust(15) + "\U000023F0 \n"
-rep += "U+1F9EE".ljust(15) + "\U0001F9EE \n"
-rep += "U+1F5D1".ljust(15) + "\U0001F5D1 \n"
+rep += "🤷‍♂️ cannot help you \U0001f534 \n"
+rep += "U+260E".ljust(15) + "\U0000260e \n"
+rep += "U+1F52D".ljust(15) + "\U000023f0 \n"
+rep += "U+1F9EE".ljust(15) + "\U0001f9ee \n"
+rep += "U+1F5D1".ljust(15) + "\U0001f5d1 \n"
 rep += "</pre>"
 
 
 @bot.message_handler(commands=["help"])
 def nohelp(message):
+    bot.reply_to(message, rep)
+
+
+@bot.edited_message_handler(func=lambda m: m.text.lower() == "buks")
+@bot.message_handler(func=lambda m: m.text.lower() == "buks")
+def buks_h(message):
+    rep = buks()
     bot.reply_to(message, rep)
 
 
@@ -85,25 +94,25 @@ model = Model("vosk-model")
 rec = KaldiRecognizer(model, SAMPLE_RATE)
 
 
-@bot.message_handler(content_types=['voice'])
+@bot.message_handler(content_types=["voice"])
 def voice_processing(message):
     file_info = bot.get_file(message.voice.file_id)
     vosko(message, file_info)
 
 
-@bot.message_handler(content_types=['video_note'])
+@bot.message_handler(content_types=["video_note"])
 def video_note_processing(message):
     file_info = bot.get_file(message.video_note.file_id)
     vosko(message, file_info)
 
 
-@bot.message_handler(content_types=['video'])
+@bot.message_handler(content_types=["video"])
 def video_processing(message):
     file_info = bot.get_file(message.video.file_id)
     vosko(message, file_info)
 
 
-@bot.message_handler(content_types=['audio'])
+@bot.message_handler(content_types=["audio"])
 def audio_processing(message):
     file_info = bot.get_file(message.audio.file_id)
     vosko(message, file_info)
@@ -111,19 +120,25 @@ def audio_processing(message):
 
 def vosko(message, file_info):
     downloaded_file = bot.download_file(file_info.file_path)
-    with open('temp.ogg', 'wb') as new_file:
+    with open("temp.ogg", "wb") as new_file:
         new_file.write(downloaded_file)
-    with subprocess.Popen(["ffmpeg", "-loglevel", "quiet", "-i",
-                           "temp.ogg",
-                           "-ar",
-                           str(SAMPLE_RATE),
-                           "-ac",
-                           "1",
-                           "-f",
-                           "s16le", "-"
-                           ],
-                          stdout=subprocess.PIPE
-                          ) as process:
+    with subprocess.Popen(
+        [
+            "ffmpeg",
+            "-loglevel",
+            "quiet",
+            "-i",
+            "temp.ogg",
+            "-ar",
+            str(SAMPLE_RATE),
+            "-ac",
+            "1",
+            "-f",
+            "s16le",
+            "-",
+        ],
+        stdout=subprocess.PIPE,
+    ) as process:
         while True:
             data = process.stdout.read(4000)
             if len(data) == 0:
@@ -176,10 +191,18 @@ def whoishome():
             p = ping3.ping(v[0])
             if p and v[1] == 0:
                 homees[k][1] = 1
-                bot.send_message(text=f"{k} turned on the comp",  disable_notification=True, chat_id="-4553062703")
+                bot.send_message(
+                    text=f"{k} turned on the comp",
+                    disable_notification=True,
+                    chat_id="-4553062703",
+                )
             elif not p and v[1] == 1:
                 homees[k][1] = 0
-                bot.send_message(text=f"{k} turned off the comp",  disable_notification=True, chat_id="-4553062703")
+                bot.send_message(
+                    text=f"{k} turned off the comp",
+                    disable_notification=True,
+                    chat_id="-4553062703",
+                )
 
 
 # thread = threading.Thread(target=whoishome)

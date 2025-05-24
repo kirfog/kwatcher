@@ -4,6 +4,16 @@ import re
 from bs4 import BeautifulSoup
 
 
+def buks():
+    r = requests.get(url="https://www.push52.ru/")
+    soup = BeautifulSoup(r.content, features="html.parser")
+    d = soup.find(id="body_CurrencyBoard1_usdrub")
+    sell = d.find("span", {"class": "sell"}).get_text()
+    buy = d.find("span", {"class": "buy"}).get_text()
+    b = f"продать = {buy}\nкупить = {sell}"
+    return b
+
+
 def get_sunrise():
     sessionSun = requests.session()
     sun = sessionSun.get(
