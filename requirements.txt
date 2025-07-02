@@ -1,0 +1,7 @@
+pyTelegramBotAPI
+bs4
+feedparser
+requests
+vosk
+argostranslate
+python-dotenv
