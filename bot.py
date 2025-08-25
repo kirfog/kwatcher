@@ -1,85 +1,55 @@
-#!/usr/bin/env python3
-import telebot
-from dotenv import load_dotenv
+import io
+import logging
 import os
 
-from botfunc import sunrise, solar, rbc, vosko, buks
-from botcom import nohelp
+from dotenv import load_dotenv
+from telegram import Update
+from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
+
+from handle_voice import rec_voice
 
 load_dotenv()
 
-BOT_TOKEN = os.environ["BOT_TOKEN"]
+TOKEN = os.environ["BOT_TOKEN"]
 
-bot = telebot.TeleBot(BOT_TOKEN, parse_mode="HTML")
-
-
-@bot.message_handler(commands=["start"])
-def start_h(message):
-    bot.reply_to(message, "already started")
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 
 
-@bot.message_handler(commands=["help"])
-def nohelp_h(message):
-    bot.reply_to(message, nohelp())
+async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    await update.message.reply_text(
+        f"An utterance from {user.username} received. Processing..."
+    )
+
+    if update.message.voice:
+        file_id = update.message.voice.file_id
+    elif update.message.audio:
+        file_id = update.message.audio.file_id
+    elif update.message.video_note:
+        file_id = update.message.video_note.file_id
+    elif update.message.video:
+        file_id = update.message.video.file_id
+
+    file = await context.bot.get_file(file_id)
+    audio_stream = io.BytesIO()
+    await file.download_to_memory(audio_stream)
+    result_text = rec_voice(audio_stream)
+    await update.message.reply_text(result_text, parse_mode="HTML")
 
 
-@bot.edited_message_handler(func=lambda m: m.text.lower() == "buks")
-@bot.message_handler(func=lambda m: m.text.lower() == "buks")
-def buks_h(message):
-    rep = buks()
-    bot.reply_to(message, rep)
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(TOKEN).build()
 
-
-@bot.edited_message_handler(func=lambda m: m.text.lower() == "rbc")
-@bot.message_handler(func=lambda m: m.text.lower() == "rbc")
-def rbc_h(message):
-    bot.reply_to(message, rbc()[:4000])
-
-
-@bot.edited_message_handler(func=lambda m: m.text.lower() == "sunrise")
-@bot.message_handler(func=lambda m: m.text.lower() == "sunrise")
-def sunrise_h(message):
-    bot.reply_to(message, sunrise())
-
-
-@bot.edited_message_handler(func=lambda m: True)
-@bot.message_handler(func=lambda m: True)
-def solar_h(message):
-    bot.reply_to(message, solar(message.text))
-
-
-def downloadfile(file_info):
-    downloaded_file = bot.download_file(file_info.file_path)
-    with open("temp.ogg", "wb") as new_file:
-        new_file.write(downloaded_file)
-
-
-@bot.message_handler(content_types=["voice"])
-def voice_processing(message):
-    file_info = bot.get_file(message.voice.file_id)
-    downloadfile(file_info)
-    bot.reply_to(message, vosko())
-
-
-@bot.message_handler(content_types=["video_note"])
-def video_note_processing(message):
-    file_info = bot.get_file(message.video_note.file_id)
-    downloadfile(file_info)
-    bot.reply_to(message, vosko())
-
-
-@bot.message_handler(content_types=["video"])
-def video_processing(message):
-    file_info = bot.get_file(message.video.file_id)
-    downloadfile(file_info)
-    bot.reply_to(message, vosko())
-
-
-@bot.message_handler(content_types=["audio"])
-def audio_processing(message):
-    file_info = bot.get_file(message.audio.file_id)
-    downloadfile(file_info)
-    bot.reply_to(message, vosko())
-
-
-bot.infinity_polling()
+    try:
+        app.initialize()
+        app.add_handler(
+            MessageHandler(
+                filters.VOICE | filters.AUDIO | filters.VIDEO_NOTE | filters.VIDEO,
+                handle_voice,
+            )
+        )
+        app.run_polling()
+    finally:
+        app.shutdown()

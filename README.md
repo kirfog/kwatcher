@@ -1,6 +1,5 @@
 ### Teleram bot
 
-* Does speech to text
-* Does anything
+* Does stream audio, video, circle and speech to text
 
-* [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI)
+* [python-telegram-bot](https://python-telegram-bot.org/)
